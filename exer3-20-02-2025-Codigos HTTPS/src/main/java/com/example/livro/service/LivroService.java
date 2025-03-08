@@ -1,5 +1,6 @@
 package com.example.livro.service;
 
+import com.example.livro.Enuns.StatusLivro;
 import com.example.livro.model.Livro;
 import com.example.livro.repository.LivroRepository;
 import jakarta.transaction.Transactional;
@@ -27,15 +28,19 @@ public class LivroService {
     }
 
     public Livro atualizar(Integer id, Livro updateLivro) {
-
-        repository.findById(id).orElseThrow();
-
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Livro não encontrado com id: " + id);
+        }
+        updateLivro.setId(id);
         return repository.save(updateLivro);
-
     }
 
     public void remover(Integer id) {
         repository.deleteById(id);
     }
 
+    public List<Livro> listar(StatusLivro statusLivro) {
+        return repository.findByStatusLivro(statusLivro);
+    }
 }
+

@@ -1,16 +1,15 @@
 package com.example.livro.controller;
 
+import com.example.livro.Enuns.StatusLivro;
 import com.example.livro.model.Livro;
 import com.example.livro.service.LivroService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -22,7 +21,7 @@ public class LivroController {
 
     @PostMapping()
     public ResponseEntity<Livro> adicionar(@RequestBody Livro livro) {
-        Livro novoLivro= service.adicionar(livro);
+        Livro novoLivro = service.adicionar(livro);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoLivro);
     }
 
@@ -33,8 +32,9 @@ public class LivroController {
     }
 
     @PutMapping("/{id}")
-    public Livro atualizar(@PathVariable Integer id, @RequestBody @Valid Livro livro) {
-        return service.atualizar(id, livro);
+    public ResponseEntity<Livro> atualizar(@PathVariable Integer id, @RequestBody @Valid Livro livro, StatusLivro statusLivro) {
+        Livro atualizado = service.atualizar(id, livro);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
@@ -42,4 +42,11 @@ public class LivroController {
         service.remover(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("/{status}")
+    public ResponseEntity<List<Livro>> listarStatus(){
+        List<Livro> statusLivros = service.listar();
+        return ResponseEntity.status(HttpStatus.OK).body(statusLivros);
+    }
+
 }
